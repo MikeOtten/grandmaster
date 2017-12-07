@@ -83,6 +83,11 @@ def GrabBoard(topx,topy,move):
     w,h = 10,24
     board = [[0 for x in range(w)] for y in range(h)]
 
+    piece1 = (0,0)
+    piece2 = (0,0)
+    piece3 = (0,0)
+    piece4 = (0,0)
+
     for j in range(24):
         curry = (j * 37) + 5#18 How far from the top of the box
         for i in range(10):
@@ -95,8 +100,30 @@ def GrabBoard(topx,topy,move):
                 board[j][i] =  1
             elif(pix == (119,119,119)):
                 board[j][i] = 3
+                piece1 = piece2
+                piece2 = piece3
+                piece3 = piece4
+                piece4 = (i,j)
 
+    print(piece1,piece2,piece3,piece4)
+    if(piece4 == (0,0)):
+        return board
 
+    for i in range(piece1[1]-1,-1,-1):
+        if(board[i][piece1[0]] == 1):
+            board[i][piece1[0]]= 0
+
+    for i in range(piece2[1]-1,-1,-1):
+        if(board[i][piece2[0]] == 1):
+            board[i][piece2[0]] = 0
+
+    for i in range(piece3[1]-1,-1,-1):
+        if(board[i][piece3[0]] == 1):
+            board[i][piece3[0]] = 0
+
+    for i in range(piece4[1]-1,-1,-1):
+        if(board[i][piece4[0]] == 1):
+            board[i][piece4[0]] = 0
     return board
 
 
@@ -147,44 +174,44 @@ def error():
 def bestmovetm(board): # TO DO
     dn = ml = rl = rr = 0
 
-    for i in range(10)
-        for j in range(24)
-            try:
-                if 
-            except IndexError:
+    #for i in range(10)
+    #    for j in range(24)
+    #        try:
+    #            if 
+    #        except IndexError:
 
-    return [AggregateHeight, CompleteLines, rl, rr]
+    #return [AggregateHeight, CompleteLines, rl, rr]
 def nextmovetm(scores):
-    if scores[0]< scores[1] && scores[0] < scores[2] && scores[0] < scores[3]:
+    if scores[0]< scores[1] and scores[0] < scores[2] and scores[0] < scores[3]:
         return 0
-    elif scores[1]< scores[0] && scores[1] < scores[2] && scores[1] < scores[3]:
+    elif scores[1]< scores[0] and scores[1] < scores[2] and scores[1] < scores[3]:
         return 1
-    elif scores[2]< scores[0] && scores[2] < scores[1] && scores[2] < scores[3]:
+    elif scores[2]< scores[0] and scores[2] < scores[1] and scores[2] < scores[3]:
         return 2
-    elif scores[3]< scores[0] && scores[3] < scores[2] && scores[3] < scores[1]:
+    elif scores[3]< scores[0] and scores[3] < scores[2] and scores[3] < scores[1]:
         return 3
     return 0
 
 def Run(boardx,boardy,FindBoardEveryupdate = False):
-    cboard = tf.placeholder(tf.float32,[None, 240],name = "input")
-    move = tf.placeholder(tf.float32,[None,5],name = "output")
+    #cboard = tf.placeholder(tf.float32,[None, 240],name = "input")
+    #move = tf.placeholder(tf.float32,[None,5],name = "output")
 
-    oWeight = tf.Variable(tf.zeros([240,5],name = "output_weight"),dtype=tf.float32)
-    oBias = tf.Variable(tf.zeros([5],name = "output_bias"),dtype=tf.float32)
-    output = tf.sigmoid(tf.matmul(cboard,oWeight)+oBias)
+    #oWeight = tf.Variable(tf.zeros([240,5],name = "output_weight"),dtype=tf.float32)
+    #oBias = tf.Variable(tf.zeros([5],name = "output_bias"),dtype=tf.float32)
+    #output = tf.sigmoid(tf.matmul(cboard,oWeight)+oBias)
 
-    loss = tf.reduce_sum(tf.square(output - move))
+    #loss = tf.reduce_sum(tf.square(output - move))
 
-    optimizer = tf.train.GradientDescentOptimizer(0.01)
-    train = optimizer.minimize(loss)
+    #optimizer = tf.train.GradientDescentOptimizer(0.01)
+    #train = optimizer.minimize(loss)
 
-    init = tf.global_variables_initializer()
-    sess = tf.Session()
-    sess.run(init) #reset values to wrong
+    #init = tf.global_variables_initializer()
+    #sess = tf.Session()
+    #sess.run(init) #reset values to wrong
+    
     nextmove = 0#random.randint(0,4)
 
-    while True:
-        pyautogui.typewrite(['enter'])  #need to hit enter
+    while True:       
         if(FindBoardEveryupdate):
             boardx, boardy = FindBoard()
         board = GrabBoard(boardx,boardy,nextmove)
@@ -195,13 +222,13 @@ def Run(boardx,boardy,FindBoardEveryupdate = False):
             exit(0)
             RestartGame()
             continue
-        traindict = {cboard:[inputdata],move:[[.1,.2,.3,.4,.5]]}#!!!!!!!! will be bestmovetm 
+        #traindict = {cboard:[inputdata],move:[[.1,.2,.3,.4,.5]]}#!!!!!!!! will be bestmovetm 
         #print("Traindict: "+str(traindict))
-        scores, _ = sess.run([output,train],traindict)
+        #scores, _ = sess.run([output,train],traindict)
         #print("Scores: \n"+str(scores))
 
         
-        nextmove = bestmovetm(scores)
+        nextmove = random.randint(0,4)#bestmovetm(scores)
         print("Next move ", nextmove)
 
 def main():
@@ -209,6 +236,8 @@ def main():
 
     if (RestartGame() == False):
         return False
+    ClickPause()
+    pyautogui.typewrite(['enter'])  #need to hit enter
     ClickPause()
     Run(boardx,boardy)
     #call to mike 
