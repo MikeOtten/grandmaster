@@ -177,15 +177,45 @@ def error():
     pass
 
 def bestmovetm(board): # TO DO
-    dn = ml = rl = rr = 0
+    AHC = -.510066      #AggregateHeight
+    CL = 0.760666       #CompleteLines
+    HOL = -35663        #Holes
+    BUMP = -0.184483    #Bumpiness
 
-    #for i in range(10)
-    #    for j in range(24)
-    #        try:
-    #            if 
-    #        except IndexError:
+    #[0][0] top left
+    #
+    #
+    #
+    #
+    #               [10] [24] bottom right
 
-    #return [AggregateHeight, CompleteLines, rl, rr]
+    #calculate agragate height
+    height[10]
+    j = 0
+    for i in range(10):
+        while True:
+            if board[i][j] == 1: 
+                break
+            j+= 1;
+        AggregateHeight += (24-j)
+        height[i] = 24-j
+    AggregateHeight = AggregateHeight/10
+
+    #calculate complete lines
+    for i in range (24):
+        if (board[0][i] == board[1][i] and board[0][i] == board[2][i] and board[0][i] == board[3][i] and board[0][i] == board[4][i] 
+        and board[0][i] == board[5][i] and board[0][i] == board[6][i] and board[0][i] == board[7][i] and board[0][i] == board[8][i] 
+        and board[0][i] == board[9][i] and board[0][i] == 1):
+            CompleteLines += 1
+    #find holes
+    for i in range(10):
+        for j in range(20):
+            x = 0
+    #calculate bumpiness
+    Bumpiness = (math.abs(height[0]-height[1])+math.abs(height[1]-height[2])+math.abs(height[2]-height[3])
+    +math.abs(height[3]-height[4])+math.abs(height[4]-height[5])+math.abs(height[5]-height[6])+math.abs(height[6]-height[7])
+    +math.abs(height[7]-height[8])+math.abs(height[8]-height[9]))
+    return [AHC*AggregateHeight, CL*CompleteLines, HOL*Holes, BUMP*Bumpiness]
 def nextmovetm(scores):
     if scores[0]< scores[1] and scores[0] < scores[2] and scores[0] < scores[3]:
         return 0
@@ -198,21 +228,21 @@ def nextmovetm(scores):
     return 0
 
 def Run(boardx,boardy,FindBoardEveryupdate = False):
-    #cboard = tf.placeholder(tf.float32,[None, 240],name = "input")
-    #move = tf.placeholder(tf.float32,[None,5],name = "output")
+    cboard = tf.placeholder(tf.float32,[None, 240],name = "input")
+    move = tf.placeholder(tf.float32,[None,5],name = "output")
 
-    #oWeight = tf.Variable(tf.zeros([240,5],name = "output_weight"),dtype=tf.float32)
-    #oBias = tf.Variable(tf.zeros([5],name = "output_bias"),dtype=tf.float32)
-    #output = tf.sigmoid(tf.matmul(cboard,oWeight)+oBias)
+    oWeight = tf.Variable(tf.zeros([240,5],name = "output_weight"),dtype=tf.float32)
+    oBias = tf.Variable(tf.zeros([5],name = "output_bias"),dtype=tf.float32)
+    output = tf.sigmoid(tf.matmul(cboard,oWeight)+oBias)
 
-    #loss = tf.reduce_sum(tf.square(output - move))
+    loss = tf.reduce_sum(tf.square(output - move))
 
-    #optimizer = tf.train.GradientDescentOptimizer(0.01)
-    #train = optimizer.minimize(loss)
+    optimizer = tf.train.GradientDescentOptimizer(0.01)
+    train = optimizer.minimize(loss)
 
-    #init = tf.global_variables_initializer()
-    #sess = tf.Session()
-    #sess.run(init) #reset values to wrong
+    init = tf.global_variables_initializer()
+    sess = tf.Session()
+    sess.run(init) #reset values to wrong
     
     nextmove = 0#random.randint(0,4)
 
@@ -227,13 +257,13 @@ def Run(boardx,boardy,FindBoardEveryupdate = False):
             exit(0)
             RestartGame()
             continue
-        #traindict = {cboard:[inputdata],move:[[.1,.2,.3,.4,.5]]}#!!!!!!!! will be bestmovetm 
+        traindict = {cboard:[inputdata],move:[[.1,.2,.3,.4,.5]]}#!!!!!!!! will be bestmovetm 
         #print("Traindict: "+str(traindict))
-        #scores, _ = sess.run([output,train],traindict)
+        scores, _ = sess.run([output,train],traindict)
         #print("Scores: \n"+str(scores))
 
         
-        nextmove = random.randint(0,4)#bestmovetm(scores)
+        nextmove = bestmovetm(scores)
         print("Next move ", nextmove)
 
 def main():
