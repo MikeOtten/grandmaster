@@ -112,18 +112,23 @@ def GrabBoard(topx,topy,move):
     for i in range(piece1[1]-1,-1,-1):
         if(board[i][piece1[0]] == 1):
             board[i][piece1[0]]= 0
+            break
 
     for i in range(piece2[1]-1,-1,-1):
         if(board[i][piece2[0]] == 1):
             board[i][piece2[0]] = 0
+            break
 
     for i in range(piece3[1]-1,-1,-1):
         if(board[i][piece3[0]] == 1):
             board[i][piece3[0]] = 0
+            break
 
     for i in range(piece4[1]-1,-1,-1):
         if(board[i][piece4[0]] == 1):
             board[i][piece4[0]] = 0
+            break
+        
     return board
 
 
